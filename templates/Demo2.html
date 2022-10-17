@@ -9,7 +9,29 @@
     <title>University Admit Eligibility Predictor</title>
 </head>
 <body>
-    <h1> Enter Details Page </h1>
-    <img src="..\static\img\hat.png">
+    <form action="/" method="post">
+        <h1> Enter Details Page </h1>
+        <img src="..\static\img\hat.png">
+        <label for="gre">GRE Score:</label>
+        <input type="number" id="gre" name="gre" min="0" max="340"><br><br>
+        <label for="tofel">TOFEL Score:</label>
+        <input type="number" id="tofel" name="tofel" min="0" max="120"><br><br>
+        <label for="university_rating">University Rating:</label>
+        <input type="number" id="university_rating" name="university_rating" min="1" max="5"><br><br>
+        <label for="sop">SOP:</label>
+        <input type="number" id="sop" name="sop" min="1" max="5"><br><br>
+        <label for="lor">LOR:</label>
+        <input type="number" id="lor" name="lor" min="1" max="5"><br><br>
+        <label for="cgpa">CGPA:</label>
+        <input type="number" id="cgpa" name="cgpa" min="0" max="10"><br><br>
+        <label for="yes_no_radio">Research</label>
+        <p>
+        <input type="radio" name="yes_no_radio" value="1">Yes
+        </p>
+        <p>
+        <input type="radio" name="yes_no_radio" value="0" checked>No
+        </p>
+        <button>Predict</button>
+    </form>
 </body>
 </html>
