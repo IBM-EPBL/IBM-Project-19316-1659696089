@@ -1,41 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" rel="noopener" target="_blank" href="../static/css/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <script type="text/javascript" src="../static/js/script.js"async></script>
-    <title>University Admit Eligibility Predictor</title>
-</head>
-<body>
-    <h1> Enter Details Page </h1>
-    <img src="..\static\img\hat.png">
-    <form action="/" method="post">
-        <div class="mb-3">
-        <label for="gre">GRE Score:</label>
-        <input type="number" id="gre" name="gre" min="0" max="340"><br><br>
+{% extends 'index.html' %}
+{% block body %}
+    <div class="p-4">
+        <div class="row mb-3">
+            <div class="col-4">
+                <h2>
+                    Enter your details and get probability of your admission
+                </h2>
+                <p>
+                    Students are often worried about their chances of admission to University. The aim of this project is to help students in shortlisting universities with their profiles. The predicted output gives them a fair idea about their admission chances in a particular university. This analysis should also help students who are currently preparing or will be preparing to get a better idea.
+                </p>
+            </div>
+            <div class="col-8">
+                <div class="card p-2 ms-2 my-2"> 
+                    <div class="card-body">
+                        <h5 class="card-title pb-4">
+                            Enter the details
+                        </h5>
+                        <form action="/" method="post">
+                            <div class="row mb-3">
+                                <label for="gre" class="col-sm-2 col-form-label ">GRE Score:</label>
+                                <div class="col-sm-10">    
+                                    <input type="number" class="form-control" id="gre" name="gre" min="250" max="340" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="tofel" class="col-sm-2 col-form-label">TOFEL Score:</label>
+                                <div class="col-sm-10">    
+                                    <input type="number" class="form-control" id="tofel" name="tofel" min="50" max="120" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="university_rating" class="col-sm-2 col-form-label">University Rating:</label>
+                                <div class="col-sm-10">    
+                                    <input type="number" class="form-control" id="university_rating" step="0.01" name="university_rating" min="1" max="5" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="sop" class="col-sm-2 col-form-label">SOP:</label>
+                                <div class="col-sm-10">    
+                                    <input type="number" class="form-control" id="sop" name="sop" step="0.01" min="1" max="5" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="lor" class="col-sm-2 col-form-label">LOR:</label>
+                                <div class="col-sm-10">    
+                                    <input type="number" class="form-control" id="lor" name="lor" step="0.01" min="1" max="5" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="cgpa" class="col-sm-2 col-form-label">CGPA:</label>
+                                <div class="col-sm-10">    
+                                    <input type="number" class="form-control" id="cgpa" name="cgpa" step="0.01" min="5" max="10" required>
+                                </div>
+                            </div>
+                            <fieldset class="row mb-3">
+                                <legend class="col-form-label col-sm-2 pt-0">Research:</legend>
+                                <div class="col-sm-10">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="yes_no_radio" id="gridRadios1" value="1">
+                                        <label class="form-check-label" for="yes_no_radio">
+                                        Yes
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="yes_no_radio" id="gridRadios2" value="0" checked>
+                                        <label class="form-check-label" for="yes_no_radio">
+                                        No
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <button type="submit" class="btn btn-primary">Predict</button>
+                        </form>
+                    </div> 
+                </div>
+            </div>
         </div>
-        <label for="tofel">TOFEL Score:</label>
-        <input type="number" id="tofel" name="tofel" min="0" max="120"><br><br>
-        <label for="university_rating">University Rating:</label>
-        <input type="number" id="university_rating" name="university_rating" min="1" max="5"><br><br>
-        <label for="sop">SOP:</label>
-        <input type="number" id="sop" name="sop" min="1" max="5"><br><br>
-        <label for="lor">LOR:</label>
-        <input type="number" id="lor" name="lor" min="1" max="5"><br><br>
-        <label for="cgpa">CGPA:</label>
-        <input type="number" id="cgpa" name="cgpa" min="0" max="10"><br><br>
-        <label for="yes_no_radio">Research</label>
-        <p>
-        <input type="radio" name="yes_no_radio" value="1">Yes
-        </p>
-        <p>
-        <input type="radio" name="yes_no_radio" value="0" checked>No
-        </p>
-        <button>Predict</button>
-    </form>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-</body>
-</html>
+    </div>
+{% endblock %}

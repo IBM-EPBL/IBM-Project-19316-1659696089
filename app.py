@@ -15,7 +15,12 @@ def index():
         
         arr = []
         for i in request.form:
-            arr.append(float(request.form[i]))
+            val = request.form[i]
+            if val == '':
+                return redirect(url_for("demo2"))
+            arr.append(float(val))
+
+        print(arr)
 
         API_KEY = "wf8mge_OQdwVO8ao2kmWCtfxOfLWl8442SH44V85v2Ls"
         token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
@@ -56,11 +61,11 @@ def index():
         result1 = response_scoring1['predictions'][0]['values']
         result2 = response_scoring2['predictions'][0]['values']
         if result2[0][2] == 'True':
-            return redirect(url_for('chance', percent=result2[0][0]))
+            return redirect(url_for('chance', percent=result1[0][0]))
         else:
-            return redirect(url_for('no_chance', percent=result2[0][0]))
+            return redirect(url_for('no_chance', percent=result1[0][0]))
     else:
-        return render_template("index.html")
+        return redirect(url_for("demo2"))
 
 @app.route("/home")
 def demo2():
@@ -76,7 +81,7 @@ def no_chance(percent):
 
 @app.route('/<path:path>')
 def catch_all():
-    return redirect(url_for("index"))
+    return redirect(url_for("demo2"))
 
 if __name__ == "__main__":
     app.run(debug=True)

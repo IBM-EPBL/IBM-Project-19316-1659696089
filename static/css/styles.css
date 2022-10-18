@@ -33,3 +33,8 @@ input.text
   padding: 3px; 
   border: 1px solid #999999;     
 }
+
+img {  
+    max-width: auto;  
+    height: auto;  
+}  
