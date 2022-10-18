@@ -13,8 +13,6 @@ def index():
                 return redirect(url_for("demo2"))
             arr.append(float(val))
 
-        print(arr)
-
         API_KEY = "wf8mge_OQdwVO8ao2kmWCtfxOfLWl8442SH44V85v2Ls"
         token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
             "apikey": API_KEY, 
@@ -39,9 +37,6 @@ def index():
             json=payload_scoring,
             headers=header
         ).json()
-        
-        print("Scoring response")
-        print(response_scoring['predictions'][0]['values'])
         
         result = response_scoring['predictions'][0]['values']
         
@@ -69,4 +64,4 @@ def catch_all():
     return redirect(url_for("demo2"))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
