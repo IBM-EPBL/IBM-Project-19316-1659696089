@@ -6,13 +6,6 @@ app = Flask(__name__)
 @app.route("/", methods = ['POST', 'GET'])
 def index():
     if request.method == 'POST':
-        def min_max_scaling(lst):
-            min_max_tup = [(290, 340), (92, 120), (1, 5), (1, 5), (1, 5), (6.5, 9.9), (0, 1)]
-            for idx in range(7):
-                v = lst[idx]
-                lst[idx] = (v - min_max_tup[idx][0]) / (min_max_tup[idx][1] - min_max_tup[idx][0])
-            return lst
-        
         arr = []
         for i in request.form:
             val = request.form[i]
@@ -29,41 +22,33 @@ def index():
             })
         mltoken = token_response.json()["access_token"]
         header = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + mltoken}
-
         payload_scoring = {
-            "input_data": [{"fields":[
-                                        'GRE Score',
+            "input_data": [{"fields":[  'GRE Score',
                                         'TOEFL Score',
                                         'University Rating',
                                         'SOP',
                                         'LOR ',
                                         'CGPA',
-                                        'Research'
-                                    ], 
+                                        'Research'], 
                             "values": [arr]
                             }]
                         }
 
-        response_scoring1 = requests.post(
+        response_scoring = requests.post(
             'https://us-south.ml.cloud.ibm.com/ml/v4/deployments/8308fd4c-24a5-46ab-96fa-263657ae4ad0/predictions?version=2022-10-18', 
             json=payload_scoring,
-            headers=header).json()
-        
-        arr = min_max_scaling(arr)
-
-        response_scoring2 = requests.post(
-            'https://us-south.ml.cloud.ibm.com/ml/v4/deployments/bad74619-8eab-47ee-b1bc-befef592f77f/predictions?version=2022-10-18', 
-            json=payload_scoring,
-            headers=header).json()
+            headers=header
+        ).json()
         
         print("Scoring response")
-        print(response_scoring1['predictions'][0]['values'],response_scoring2['predictions'][0]['values'])
-        result1 = response_scoring1['predictions'][0]['values']
-        result2 = response_scoring2['predictions'][0]['values']
-        if result2[0][2] == 'True':
-            return redirect(url_for('chance', percent=result1[0][0]))
+        print(response_scoring['predictions'][0]['values'])
+        
+        result = response_scoring['predictions'][0]['values']
+        
+        if result[0][0] > 0.5:
+            return redirect(url_for('chance', percent=result[0][0]*100))
         else:
-            return redirect(url_for('no_chance', percent=result1[0][0]))
+            return redirect(url_for('no_chance', percent=result[0][0]*100))
     else:
         return redirect(url_for("demo2"))
 

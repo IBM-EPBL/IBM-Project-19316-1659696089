@@ -37,4 +37,12 @@ input.text
 img {  
     max-width: auto;  
     height: auto;  
-}  
+} 
+
+.text-responsive {
+    font-size: calc(50% + 0.6vw + 0.6vh);
+}
+
+.text-responsive-h {
+    font-size: calc(80% + 0.6vw + 0.6vh);
+}
