@@ -1,37 +1,64 @@
-from email import contentmanager
-from http.client import responses
-import requests
-import pickle
 from flask import Flask, render_template, redirect, url_for, request
-
+import requests
 
 app = Flask(__name__)
 
 @app.route("/", methods = ['POST', 'GET'])
 def index():
     if request.method == 'POST':
+        def min_max_scaling(lst):
+            min_max_tup = [(290, 340), (92, 120), (1, 5), (1, 5), (1, 5), (6.5, 9.9), (0, 1)]
+            for idx in range(7):
+                v = lst[idx]
+                lst[idx] = (v - min_max_tup[idx][0]) / (min_max_tup[idx][1] - min_max_tup[idx][0])
+            return lst
         
-        arr= [300,99,1,3,2,6.8,1]
-        # for i in request.form:
-        #     arr.append(float(request.form[i]))
-        
-        lab = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
-        
-        args=""
-        for nu, la in zip(arr, lab):
-            args += la+'='+str(nu)+'&'
+        arr = []
+        for i in request.form:
+            arr.append(float(request.form[i]))
 
-        print('\n\nhttp://usouthcloudibm.pythonanywhere.com/logistic?'+args[:-1])
-        response = requests.get('http://usouthcloudibm.pythonanywhere.com/logistic?'+args[:-1])
-        res = response.json()
+        API_KEY = "wf8mge_OQdwVO8ao2kmWCtfxOfLWl8442SH44V85v2Ls"
+        token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
+            "apikey": API_KEY, 
+            "grant_type": 'urn:ibm:params:oauth:grant-type:apikey'
+            })
+        mltoken = token_response.json()["access_token"]
+        header = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + mltoken}
 
-        percent = pickle.load(open('university_percent.pkl', 'rb')).predict([arr])
-        print(percent)
-        print(res)
-        if res['status'] == 'True':
-            return redirect(url_for('chance', percent=percent[0]))
+        payload_scoring = {
+            "input_data": [{"fields":[
+                                        'GRE Score',
+                                        'TOEFL Score',
+                                        'University Rating',
+                                        'SOP',
+                                        'LOR ',
+                                        'CGPA',
+                                        'Research'
+                                    ], 
+                            "values": [arr]
+                            }]
+                        }
+
+        response_scoring1 = requests.post(
+            'https://us-south.ml.cloud.ibm.com/ml/v4/deployments/8308fd4c-24a5-46ab-96fa-263657ae4ad0/predictions?version=2022-10-18', 
+            json=payload_scoring,
+            headers=header).json()
+        
+        arr = min_max_scaling(arr)
+
+        response_scoring2 = requests.post(
+            'https://us-south.ml.cloud.ibm.com/ml/v4/deployments/bad74619-8eab-47ee-b1bc-befef592f77f/predictions?version=2022-10-18', 
+            json=payload_scoring,
+            headers=header).json()
+        
+        print("Scoring response")
+        print(response_scoring1['predictions'][0]['values'],response_scoring2['predictions'][0]['values'])
+        result1 = response_scoring1['predictions'][0]['values']
+        result2 = response_scoring2['predictions'][0]['values']
+        if result2[0][2] == 'True':
+            return redirect(url_for('chance', percent=result2[0][0]))
         else:
-            return redirect(url_for('chance', percent=percent[0]))
+            return redirect(url_for('no_chance', percent=result2[0][0]))
     else:
         return render_template("index.html")
 
