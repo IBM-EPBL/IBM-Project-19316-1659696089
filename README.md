@@ -1,5 +1,4 @@
-# IBM-Project-19316-1659696089
-## University Admit Eligibility Predictor <br />
+# IBM-Project-19316-1659696089 <br /> University Admit Eligibility Predictor <br />
 ### project web-link: [click here](http://ibmsmart.pythonanywhere.com/home) <br/>
 ## Team ID: PNT2022TMID19821 <br /> Team Members: Gowtham D, Karthikeyan S, Mahesh J, Gokul kanna S, Ganeshan B
 
